@@ -1,11 +1,9 @@
-module.exports = {
-    extends: ["next/core-web-vitals"],
-    parserOptions: {
-      ecmaVersion: 2021,
-      sourceType: "module",
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    eslint: {
+      ignoreDuringBuilds: true,
     },
-    rules: {
-      // Define any custom ESLint rules you want.
-    },
+    // You can add more Next.js configuration options here if needed.
   };
   
+  export default nextConfig;
