@@ -23,10 +23,12 @@ export async function sendToDB(entries) {
     for (const entry of validEntries) {
       console.log("Saving entry:", entry);
 
+      // Use the raw InvoiceDate converted to a Date object.
       const invoiceDate = entry.InvoiceDate ? new Date(entry.InvoiceDate) : new Date();
 
+      // Build the payload using the raw InvoiceDate for order_timestamp.
       const payload = {
-        order_timestamp: invoiceDate,
+        order_timestamp: invoiceDate,  // This is a Date object, which Prisma can handle.
         order_id: entry.SONumber || "",
         user_name: entry.CustomerName || "",
         user_email: entry.user_email || "",
@@ -37,12 +39,9 @@ export async function sendToDB(entries) {
       };
 
       console.log("Payload to save:", payload);
-      // Extra log just before saving:
       console.log("About to save payload for entry with order_id:", payload.order_id);
 
-      await prisma.processedEntry.create({
-        data: payload,
-      });
+      await prisma.processedEntry.create({ data: payload });
       console.log("Entry saved successfully:", entry.SONumber);
     }
     console.log("All processed entries saved successfully.");
