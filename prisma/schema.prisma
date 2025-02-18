@@ -1,0 +1,23 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql" // or your preferred database provider
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ProcessedEntry {
+  id              Int      @id @default(autoincrement())
+  order_timestamp DateTime
+  order_id        String
+  user_name       String
+  user_email      String
+  client_user_id  String
+  order_total     Float
+  order_subtotal  Float
+  order_type      String
+  createdAt       DateTime @default(now())
+}
