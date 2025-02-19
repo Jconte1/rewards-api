@@ -2,7 +2,7 @@
 
 import { processData } from '../../functions/processData';
 
-import { sendToDB } from '../../functions/sendToDB';
+import { sendToDB } from '../../functions/sendToDB';  
 
 export async function POST(request) {
   try {
@@ -13,11 +13,7 @@ export async function POST(request) {
     const result = processData(data);
 
     // SEND PROCESSED DATA TO DATABASE:
-    if (result.receivedData.Inserted && result.receivedData.Inserted.length > 0) {
-      await sendToDB(result.receivedData.Inserted);
-    } else {
-      console.log("No qualifying entries to save to the database.");
-    }
+    await sendToDB(result.receivedData.Inserted);
 
     return new Response(
       JSON.stringify({
