@@ -1,6 +1,7 @@
 // src/functions/processData.js
 
 import { extractEmails } from "./extractEmails";
+import { formatDateToCSV } from "./formatDateToCSV";
 
 /**
  * Processes the incoming data.
@@ -12,6 +13,8 @@ export function processData(data) {
   console.log("Received data:", data);
 
   const insertedItems = data.Inserted;
+  const qualifiedItems = []; // This will store only qualified items
+
   if (insertedItems && insertedItems.length > 0) {
     insertedItems.forEach((item) => {
       // Use the correct keys from the incoming JSON:
@@ -30,18 +33,15 @@ export function processData(data) {
         designerEmail = null;
         console.log("Designer does not qualify");
       }
-
-      // Here, if builderEmail is blank or null, treat it as non-qualifying.
       if (builderEmail === "null" || builderEmail === "") {
         builderEmail = null;
         console.log("Builder does not qualify");
       }
 
+      // For this example, if both qualify, we skip the item (or you could handle them separately)
       if (designerEmail && builderEmail) {
-        // TODO: Create two separate entries for designer and builder.
         console.log("Both designer and builder qualify.");
-        // For now, we exit processing for this item.
-        return;
+        return; // Skip this item
       } else if (designerEmail) {
         // Designer qualifies.
         item.user_email = designerEmail;
@@ -59,39 +59,29 @@ export function processData(data) {
           client_user_id: item.client_user_id,
         });
       } else {
-        // Neither qualifies or no matching data.
         console.log("No qualifying designer or builder found.");
-        // Stop further processing for this item.
-        return;
+        return; // Skip this item
       }
 
-      // Optionally, update the item with the processed emails so further logic uses these values.
+      // Update the item with the processed emails.
       item.DesignerRewards = designerEmail;
       item.Email = builderEmail;
 
       // Process the multiplier for ExtAmount.
       console.log("Original ExtAmount:", item.ExtAmount);
       const soNumber = item.SONumber;
-      if (soNumber.startsWith("HW")) {
-        // extAmount is doubled.
+      if (soNumber.startsWith("HW") || soNumber.startsWith("PG") || soNumber.startsWith("DS")) {
         item.ExtAmount = item.ExtAmount * 2;
-      } else if (soNumber.startsWith("PG")) {
-        // extAmount is doubled.
-        item.ExtAmount = item.ExtAmount * 2;
-      } else {
-        // extAmount stays as is.
+      } else if (soNumber.startsWith("PU")) {
+        console.log("Personal Order does not qualify.");
+        return; // Skip this item
       }
       console.log("Updated ExtAmount:", item.ExtAmount);
 
       // Assign the extAmount to the CSV fields: order_total and order_subtotal.
       item.order_total = item.ExtAmount;
       item.order_subtotal = item.ExtAmount;
-      console.log(
-        "Assigned order_total:",
-        item.order_total,
-        "order_subtotal:",
-        item.order_subtotal
-      );
+      console.log("Assigned order_total:", item.order_total, "order_subtotal:", item.order_subtotal);
 
       // Determine order type based on the Type field.
       const type = item.Type;
@@ -103,20 +93,20 @@ export function processData(data) {
       console.log("Order Type:", item.order_type);
 
       // Now assign the remaining CSV fields that don't need conditional logic.
-      item.order_timestamp = item.InvoiceDate;
+      // For CSV export we want a formatted date:
+      item.order_timestamp = formatDateToCSV(item.InvoiceDate);
       item.order_id = item.SONumber;
       item.user_name = item.CustomerName;
-      console.log(
-        "Assigned order_timestamp:",
-        item.order_timestamp,
-        "order_id:",
-        item.order_id,
-        "user_name:",
-        item.user_name
-      );
+      console.log("Assigned order_timestamp:", item.order_timestamp, "order_id:", item.order_id, "user_name:", item.user_name);
+
+      // Since this item qualifies, add it to our new array.
+      qualifiedItems.push(item);
     });
   }
 
+  // Replace the original Inserted array with the qualified ones.
+  data.Inserted = qualifiedItems;
+  
   return {
     status: "success",
     message: "Data processed successfully",

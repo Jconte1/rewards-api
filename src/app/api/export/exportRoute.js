@@ -4,7 +4,7 @@ import { exportAndClearDB } from '../../functions/exportAndClearDB';
 
 export async function POST(request) {
   try {
-    // Call the function that exports all entries to CSV and clears the database.
+   
     await exportAndClearDB();
 
     return new Response(
