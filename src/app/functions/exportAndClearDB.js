@@ -33,8 +33,8 @@ export async function exportAndClearDB() {
     console.log("Generated filename:", filename);
 
     // Upload the CSV file via FTP.
-    // await uploadCSV(csvString, filename);
-    // console.log("CSV file uploaded successfully:", filename);
+    await uploadCSV(csvString, filename);
+    console.log("CSV file uploaded successfully:", filename);
 
     // Delete all entries from the ProcessedEntry table.
     const deleteResult = await prisma.processedEntry.deleteMany();

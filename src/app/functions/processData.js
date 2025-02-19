@@ -106,7 +106,7 @@ export function processData(data) {
 
   // Replace the original Inserted array with the qualified ones.
   data.Inserted = qualifiedItems;
-  
+
   return {
     status: "success",
     message: "Data processed successfully",
