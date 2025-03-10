@@ -13,9 +13,14 @@ model ProcessedEntry {
   order_id        String
   user_name       String
   user_email      String
+  member_id       String
   client_user_id  String
   order_total     Float
   order_subtotal  Float
   order_type      String
+  product_id      String
+  product_price   Float
+  quantity        String
+  product_title   String
   createdAt       DateTime @default(now())
 }

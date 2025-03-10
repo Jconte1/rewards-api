@@ -32,10 +32,15 @@ export async function sendToDB(entries) {
         order_id: entry.SONumber || "",
         user_name: entry.CustomerName || "",
         user_email: entry.user_email || "",
+        member_id: entry.member_id || "",
         client_user_id: entry.client_user_id || "",
         order_total: entry.order_total != null ? entry.order_total : 0,
         order_subtotal: entry.order_subtotal != null ? entry.order_subtotal : 0,
         order_type: entry.order_type || "",
+        product_id: entry.product_id || "",
+        product_price: entry.product_price || "",
+        quantity: entry.quantity || 1,
+        product_title: entry.product_title || "invoice",
       };
 
       console.log("Payload to save:", payload);

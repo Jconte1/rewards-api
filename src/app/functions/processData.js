@@ -46,17 +46,21 @@ export function processData(data) {
         // Designer qualifies.
         item.user_email = designerEmail;
         item.client_user_id = designerEmail;
+        item.member_id = designerEmail
         console.log("Only designer qualifies.", {
           user_email: item.user_email,
           client_user_id: item.client_user_id,
+          member_id: item.member_id,
         });
       } else if (builderEmail) {
         // Builder qualifies.
         item.user_email = builderEmail;
         item.client_user_id = builderEmail;
+        item.member_id = builderEmail
         console.log("Only builder qualifies.", {
           user_email: item.user_email,
           client_user_id: item.client_user_id,
+          member_id: item.member_id,
         });
       } else {
         console.log("No qualifying designer or builder found.");
@@ -97,6 +101,10 @@ export function processData(data) {
       item.order_timestamp = formatDateToCSV(item.InvoiceDate);
       item.order_id = item.SONumber;
       item.user_name = item.CustomerName;
+      item.product_id = item.InvoiceNumber;
+      item.product_price = item.order_total;
+      item.quantity = "1";
+      item.product_title = "invoice"
       console.log("Assigned order_timestamp:", item.order_timestamp, "order_id:", item.order_id, "user_name:", item.user_name);
 
       // Since this item qualifies, add it to our new array.

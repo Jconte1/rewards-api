@@ -7,6 +7,8 @@ export async function POST(request) {
     // Parse the request payload
     const payload = await request.json();
     
+    // TODO: MAKE MANUAL WEBHOOK TRIGGER
+    // TEMP WEBHOOK 
     // Optional: Check for a specific trigger flag
     if (!payload.Inserted || !payload.Inserted[0]?.DesignerRewardsUploaded) {
       return new Response(

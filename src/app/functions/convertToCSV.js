@@ -8,10 +8,15 @@ const headers = [
   "order_id",
   "user_name",
   "user_email",
+  "member_id",
   "client_user_id",
   "order_total",
   "order_subtotal",
-  "order_type"
+  "order_type",
+  "product_id",
+  "product_price",
+  "quantity",
+  "product_title"
 ];
 
 /**
@@ -20,6 +25,7 @@ const headers = [
  * @param {Array<Object>} rows - The array of processed items.
  * @returns {string} - A CSV formatted string.
  */
+
 export function convertToCSV(rows) {
   // Start with the header row.
   const csvRows = [];

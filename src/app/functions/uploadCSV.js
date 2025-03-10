@@ -5,14 +5,14 @@ import { Readable } from "stream";
 
 export async function uploadCSV(csvString, filename) {
   const client = new Client();
-  client.ftp.verbose = true; // Optional: enables detailed logging
+  client.ftp.verbose = true; // enables detailed logging
 
   try {
     await client.access({
-      host: process.env.ZINRELO_FTP_LOCATION,  // e.g., "ftp.example.com"
-      user: process.env.ZINRELO_FTP_USERNAME,    // Your FTP username
-      password: process.env.ZINRELO_FTP_PASSWORD,  // Your FTP password
-      secure: false, // Set to true if your server requires FTPS
+      host: process.env.ZINRELO_FTP_LOCATION,  
+      user: process.env.ZINRELO_FTP_USERNAME,    
+      password: process.env.ZINRELO_FTP_PASSWORD,  
+      secure: false, // Set to 'true' if your server requires FTPS
     });
 
     // Navigate to the specified directory, if provided.
