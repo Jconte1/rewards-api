@@ -2,7 +2,7 @@
 
 import { extractEmails } from "./extractEmails";
 import { formatDateToCSV } from "./formatDateToCSV";
-
+import { duplicate } from "./duplicate";
 /**
  * Processes the incoming data.
  *
@@ -41,7 +41,8 @@ export function processData(data) {
       // For this example, if both qualify, we skip the item (or you could handle them separately)
       if (designerEmail && builderEmail) {
         console.log("Both designer and builder qualify.");
-        return; // Skip this item
+        duplicate(item, qualifiedItems, designerEmail, builderEmail);
+        return; 
       } else if (designerEmail) {
         // Designer qualifies.
         item.user_email = designerEmail;

@@ -10,25 +10,39 @@ const prisma = new PrismaClient();
  * @param {Array<Object>} entries - An array of processed entry objects.
  */
 export async function sendToDB(entries) {
+ // src/app/functions/sendToDB.js
+const builders = (await import('../util/builders.json')).default;
+const designers = (await import('../util/designers.json')).default;
+
+
+  const allowedEmails = new Set([
+    ...builders.map(email => email.toLowerCase()),
+    ...designers.map(email => email.toLowerCase()),
+  ]);
+
   try {
     console.log("Received entries for DB saving:", entries);
 
-    // Filter out any null or undefined entries.
-    const validEntries = entries.filter(entry => entry != null);
-    console.log("Valid entries to save (length):", validEntries.length);
-    validEntries.forEach((entry, i) => {
-      console.log(`Valid entry ${i}:`, entry);
+    // Filter out null/undefined entries and check against allowed emails
+    const validEntries = entries.filter(entry => {
+      if (!entry || !entry.user_email) return false;
+      const normalizedEmail = entry.user_email.toLowerCase();
+      const isAllowed = allowedEmails.has(normalizedEmail);
+      if (!isAllowed) {
+        console.log(`Skipping entry with unrecognized email: ${normalizedEmail}`);
+      }
+      return isAllowed;
     });
+
+    console.log("Valid entries to save (length):", validEntries.length);
 
     for (const entry of validEntries) {
       console.log("Saving entry:", entry);
 
-      // Use the raw InvoiceDate converted to a Date object.
       const invoiceDate = entry.InvoiceDate ? new Date(entry.InvoiceDate) : new Date();
 
-      // Build the payload using the raw InvoiceDate for order_timestamp.
       const payload = {
-        order_timestamp: invoiceDate,  // This is a Date object, which Prisma can handle.
+        order_timestamp: invoiceDate,
         order_id: entry.SONumber || "",
         user_name: entry.CustomerName || "",
         user_email: entry.user_email || "",
@@ -44,11 +58,10 @@ export async function sendToDB(entries) {
       };
 
       console.log("Payload to save:", payload);
-      console.log("About to save payload for entry with order_id:", payload.order_id);
-
       await prisma.processedEntry.create({ data: payload });
       console.log("Entry saved successfully:", entry.SONumber);
     }
+
     console.log("All processed entries saved successfully.");
   } catch (error) {
     console.error("Error saving processed entries:", error.stack);
