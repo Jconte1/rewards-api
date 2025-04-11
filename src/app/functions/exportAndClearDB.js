@@ -29,7 +29,7 @@ export async function exportAndClearDB() {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    const filename = `ZN_DAILY_TRANSACTIONS_${year}${month}${day}.csv`;
+    const filename = `ZN_DAILY_TRANSACTIONS_${year}${month}16.csv`;
     console.log("Generated filename:", filename);
 
     // Upload the CSV file via FTP.
