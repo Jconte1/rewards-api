@@ -9,17 +9,9 @@ const prisma = new PrismaClient();
  *
  * @param {Array<Object>} entries - An array of processed entry objects.
  */
+
 export async function sendToDB(entries) {
  // src/app/functions/sendToDB.js
-const builders = (await import('../util/builders.json')).default;
-const designers = (await import('../util/designers.json')).default;
-
-
-  const allowedEmails = new Set([
-    ...builders.map(email => email.toLowerCase()),
-    ...designers.map(email => email.toLowerCase()),
-  ]);
-
   try {
     console.log("Received entries for DB saving:", entries);
 
@@ -27,11 +19,8 @@ const designers = (await import('../util/designers.json')).default;
     const validEntries = entries.filter(entry => {
       if (!entry || !entry.user_email) return false;
       const normalizedEmail = entry.user_email.toLowerCase();
-      const isAllowed = allowedEmails.has(normalizedEmail);
-      if (!isAllowed) {
-        console.log(`Skipping entry with unrecognized email: ${normalizedEmail}`);
-      }
-      return isAllowed;
+      
+      return normalizedEmail;
     });
 
     console.log("Valid entries to save (length):", validEntries.length);

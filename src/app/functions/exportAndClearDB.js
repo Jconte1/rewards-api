@@ -37,8 +37,8 @@ export async function exportAndClearDB() {
     console.log("CSV file uploaded successfully:", filename);
 
     // Delete all entries from the ProcessedEntry table.
-    const deleteResult = await prisma.processedEntry.deleteMany();
-    console.log("Deleted entries:", deleteResult.count);
+    // const deleteResult = await prisma.processedEntry.deleteMany();
+    // console.log("Deleted entries:", deleteResult.count);
 
     console.log("Export and clear process completed successfully.");
   } catch (error) {
