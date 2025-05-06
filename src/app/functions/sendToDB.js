@@ -1,6 +1,7 @@
 // src/app/functions/sendToDB.js
 
 import { PrismaClient } from '@prisma/client';
+import addRandomId from './addRandomId';
 
 const prisma = new PrismaClient();
 
@@ -32,7 +33,7 @@ export async function sendToDB(entries) {
 
       const payload = {
         order_timestamp: invoiceDate,
-        order_id: entry.SONumber || "",
+        order_id: addRandomId(entry.SONumber || ""),
         user_name: entry.CustomerName || "",
         user_email: entry.user_email || "",
         member_id: entry.member_id || "",
